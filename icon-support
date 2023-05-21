@@ -157,10 +157,388 @@ get_mime_type() {
 	mime_type=$(file "-${file_flags:-biL}" "$1" 2>/dev/null)
 }
 
+get_icon() {
+	# $1 Absolute path to the file
+	# $2 name of the file/directory
+	# $3 the extracted extension from the file name
+
+	local path=$1
+	local name=$2
+	local ext="$(echo $3 | cut -d '_' -f 2)"
+
+	# Icons for directories
+	[[ -d "$1" ]] && {
+		case "$name" in
+		# XDG dirs
+		'Desktop')
+			printf -- '󱂵'
+			return
+			;;
+		'Documents')
+			printf -- '󱧶'
+			return
+			;;
+		'Downloads')
+			printf -- '󰉍'
+			return
+			;;
+		'Music')
+			printf -- '󱍙'
+			return
+			;;
+		'Pictures')
+			printf -- '󰉏'
+			return
+			;;
+		'Public')
+			printf -- '󰚝'
+			return
+			;;
+		'Templates')
+			printf -- '󰉗'
+			return
+			;;
+		'Videos')
+			printf -- '󱧺'
+			return
+			;;
+			# Others
+		'.git')
+			printf -- '󰊢'
+			return
+			;;
+		'empty')
+			printf -- '󰉖'
+			return
+			;;
+		'node_modules')
+			printf -- '󰎙'
+			return
+			;;
+		*)
+			printf -- ''
+			return
+			;;
+		esac
+	}
+
+	# Icons for files with no extension
+	[[ "$name" == "$ext" ]] && {
+		case "$2" in
+		'config' | 'Makefile' | \
+			'ini')
+			printf -- '󱁻'
+			return
+			;;
+		'LICENSE')
+			printf -- '󰿃'
+			return
+			;;
+		'playlists')
+			printf -- '󰲸'
+			return
+			;;
+		esac
+	}
+
+	# Icon for files with the name starting with '.'
+	# without an extension
+	[[ "$name" == ".$ext" ]] && {
+		case "$2" in
+		'.bash_aliases' | '.bash_history' | \
+			'.bash_logout' | '.bash_profile' | '.bashrc' | \
+			'.DS_Store' | \
+			'.pam_environment' | '.profile' | \
+			'.zshrc' | '.zhistory' | '.zshenv')
+			printf -- '󱁻'
+			return
+			;;
+		'.gitattributes' | \
+			'.gitconfig' | \
+			'.gitignore')
+			printf -- '󰊢'
+			return
+			;;
+		'.npmrc')
+			printf -- '󰛷'
+			return
+			;;
+		'.vim' | \
+			'.viminfo' | \
+			'.vimrc')
+			printf -- ''
+			return
+			;;
+		esac
+	}
+
+	# Icon for files whose names have an extension
+	[[ "$name" == *"."* ]] && {
+		case "$2" in
+		'CONTRIBUTING.md')
+			printf -- '󰅍'
+			return
+			;;
+		'mimeapps.list' | \
+			'user-dirs.dirs')
+			printf -- '󱁻'
+			return
+			;;
+		'package-lock.json' | \
+			'package.json')
+			printf -- '󰎙'
+			return
+			;;
+		'favicon.ico')
+			printf -- '󰓏'
+			return
+			;;
+		'README.md')
+			printf -- '󰋼'
+			return
+			;;
+		'robots.txt')
+			printf -- '󰚩'
+			return
+			;;
+		'vite.config.ts')
+			printf -- '󱐋'
+			return
+			;;
+		esac
+
+		case "$ext" in
+		'7z' | 'apk' | \
+			'bz2' | 'cab' | \
+			'cpio' | 'deb' | \
+			'gem' | 'gz' | \
+			'gzip' | 'lha' | \
+			'lzh' | 'lzma' | \
+			'rar' | 'rpm' | \
+			'tar' | 'tgz' | \
+			'xbps' | 'xz' | \
+			'zip')
+			printf -- '󰀼'
+			return
+			;;
+		'bat' | 'conf' | \
+			'cvs' | \
+			'htaccess' | \
+			'htpasswd' | \
+			'ini' | 'rc' | \
+			'toml' | 'yaml' | \
+			'yml')
+			printf -- '󱁻'
+			return
+			;;
+		'asp' | 'awk' | \
+			'bash' | 'csh' | \
+			'efi' | 'elf' | \
+			'fish' | 'ksh' | \
+			'ps1' | 'rom' | \
+			'sh' | 'zsh')
+			printf -- '󰆍'
+			return
+			;;
+		'avi' | 'flv' | \
+			'm4v' | 'mkv' | \
+			'mov' | 'mp4' | \
+			'mpeg' | 'mpg' | \
+			'webm')
+			printf -- '󰈫'
+			return
+			;;
+		'bmp' | 'gif' | \
+			'ico' | 'jpeg' | \
+			'jpg' | 'png' | \
+			'ppt' | 'pptx' | \
+			'webp')
+			printf -- '󰈟'
+			return
+			;;
+		'aup' | 'cue' | \
+			'flac' | 'm4a' | \
+			'mp3' | 'ogg' | \
+			'wav')
+			printf -- '󰈣'
+			return
+			;;
+		'c' | 'c++' | \
+			'cc' | 'cp' | \
+			'cpp' | 'cxx' | \
+			'h' | 'hpp')
+			printf -- '󰙲'
+			return
+			;;
+		'docx' | 'doc')
+			printf -- '󰈬'
+			return
+			;;
+		'epub' | \
+			'rtf')
+			printf -- '󰂺'
+			return
+			;;
+		'pdf')
+			printf -- '󰈦'
+			return
+			;;
+		'xls' | 'xlsx')
+			printf -- '󰈛'
+			return
+			;;
+		'ejs' | 'slim' | \
+			'htm' | 'html' | 'xhtml')
+			printf -- '󰌝'
+			return
+			;;
+		'xml')
+			printf -- '󰈮'
+			return
+			;;
+		'a' | 'cmake' | \
+			'jl' | 'o' | \
+			'so')
+			printf -- '󰛡'
+			return
+			;;
+		'css')
+			printf -- '󰌜'
+			return
+			;;
+		'db' | 'dump' | \
+			'img' | 'iso' | \
+			'sql')
+			printf -- '󰀼'
+			return
+			;;
+		'f#' | 'fs' | \
+			'fsi' | 'fsx' | \
+			'fsscript')
+			printf -- ''
+			return
+			;;
+		'md' | 'mdx')
+			printf -- '󰍔'
+			return
+			;;
+		'dll' | 'exe' | \
+			'msi')
+			printf -- '󰖳'
+			return
+			;;
+		'class' | \
+			'jar' | 'java')
+			printf -- '󰬷'
+			return
+			;;
+		'json')
+			printf -- '󰘦'
+			return
+			;;
+		'py' | 'pyc' | \
+			'pyd' | 'pyo')
+			printf -- '󰌠'
+			return
+			;;
+		'js' | 'cjs' | 'mjs')
+			printf -- ''
+			return
+			;;
+		'jsx' | 'tsx')
+			printf -- '󰜈'
+			return
+			;;
+		'key' | 'pub')
+			printf -- '󱕵'
+			return
+			;;
+		'vim' | 'vimrc')
+			printf -- ''
+			return
+			;;
+		'psb' | 'psd')
+			printf -- ''
+			return
+			;;
+		'rlib' | 'rs')
+			printf -- '󱘗'
+			return
+			;;
+		'sass' | 'scss')
+			printf -- '󰟬'
+			return
+			;;
+		'sln' | 'suo')
+			printf -- '󰘐'
+			return
+			;;
+		'ai')
+			printf -- ''
+			return
+			;;
+		'cs')
+			printf -- '󰌛'
+			return
+			;;
+		'dart')
+			printf -- ''
+			return
+			;;
+		'diff')
+			printf -- '󰢪'
+			return
+			;;
+		'go')
+			printf -- '󰟓'
+			return
+			;;
+		'log')
+			printf -- '󰈙'
+			return
+			;;
+		'lua')
+			printf -- '󰢱'
+			return
+			;;
+		'nix')
+			printf -- '󱄅'
+			return
+			;;
+		'php')
+			printf -- '󰌟'
+			return
+			;;
+		'rss')
+			printf -- '󰑫'
+			return
+			;;
+		'swift')
+			printf -- '󰛥'
+			return
+			;;
+		'ts')
+			printf -- '󰛦'
+			return
+			;;
+		'txt')
+			printf -- '󰈙'
+			return
+			;;
+		'vue')
+			printf -- '󰡄'
+			return
+			;;
+		esac
+	}
+
+	printf -- '󰈔'
+	return
+}
+
 status_line() {
 	# Status_line to print when files are marked for operation.
-	local mark_ui="[${#marked_files[@]}] selected "
-	mark_ui+="[${file_program[*]:-y,m,d,b,s}] [p] ->"
+	local mark_ui="[${#marked_files[@]}] selected (${file_program[*]}) [p] ->"
 
 	mark_ui="${marked_files[*]:+"$mark_ui"}"
 
@@ -196,29 +574,6 @@ status_line() {
 		"$LINES"
 }
 
-get_file_sizes() {
-	# Get sizes of files.
-	[[ -z ${files[*]} ]] &&
-		return
-
-	IFS=$'\n' read -d "" -ra file_sizes < <(du -ks "${files[@]}")
-	file_sizes=("${file_sizes[@]//[[:space:]]*/}")
-
-	# Find the longest file size.
-	for size in "${file_sizes[@]}"; do
-		((${#size} > max_size)) &&
-			((max_size = ${#size}))
-	done
-
-	# Convert byte formatted sizes to human-readable.
-	for i in "${!file_sizes[@]}"; do
-		case "${file_sizes[i]}" in
-		??? | ?? | ?) file_sizes[i]+="KB" ;;
-		*) file_sizes[i]="$((file_sizes[i] / 1024))MB" ;;
-		esac
-	done
-}
-
 read_dir() {
 	# Read a directory to an array and sort it directories first.
 	local dirs
@@ -247,16 +602,11 @@ read_dir() {
 
 	list=("${dirs[@]}" "${files[@]}")
 
-	# Retrieve file sizes if enabled.
-	((${FFF_SHOW_SIZE:=1} == 1)) &&
-		get_file_sizes
-
 	# Indicate that the directory is empty.
 	[[ -z ${list[0]} ]] &&
 		list[0]=empty
 
 	((list_total = ${#list[@]} - 1))
-	((dir_total = ${#dirs[@]}))
 
 	# Save the original dir in a second list as a backup.
 	cur_list=("${list[@]}")
@@ -268,6 +618,7 @@ print_line() {
 	local file_ext=${file_name##*.}
 	local format
 	local suffix
+	local icon
 
 	# Help line
 	if ((helping)); then
@@ -354,14 +705,12 @@ print_line() {
 	# Remove all non-printable characters.
 	file_name=${file_name//[^[:print:]]/^[}
 
-	((${FFF_SHOW_SIZE:=1} == 1)) && [[ -f ${list[$1]} ]] && {
-		local file_size="${file_sizes[$1 - dir_total]}"
-		file_name="${file_name:0:$((COLUMNS - max_size - 1))}"
-	}
+	((${FFF_FILE_ICON:=0} == 1 && !helping)) &&
+		icon="$(get_icon "${list[$1]}" "$file_name" "$file_ext") "
 
-	printf '\r%b%s\e[m\e[%sC\e[%sD%s\r' \
-		"$format" "${file_name}${suffix}" \
-		"$COLUMNS" "${#file_size}" "$file_size"
+	printf '\r%b%s\e[m\r' \
+		"${file_pre}${format}${icon}" \
+		"${file_name}${suffix}${file_post}"
 }
 
 draw_dir() {
@@ -562,6 +911,7 @@ list_help() {
 		"${FFF_KEY_SHELL:-!}: open shell in current dir"
 		"${FFF_KEY_ATTRIBUTES:-K}: view file/dir attributes"
 		"${FFF_KEY_IMAGE:-i}: display image with w3m-img"
+		"${FFF_KEY_ICON:-I}: display icon (may cause perf problems)"
 		''
 		"${FFF_KEY_MKFILE:-a}: new file"
 		"${FFF_KEY_MKDIR:-A}: new dir"
@@ -614,7 +964,6 @@ mark() {
 			mark_dir=$PWD
 		else
 			marked_files=()
-			file_program=()
 		fi
 
 		redraw
@@ -632,9 +981,21 @@ mark() {
 		print_line "$1"
 	fi
 
-	# If no programs are marked, clear the type of operation.
-	[[ -z ${marked_files[*]} ]] &&
-		file_program=()
+	# Find the program to use.
+	case "$2" in
+	${FFF_KEY_YANK:=y} | ${FFF_KEY_YANK_ALL:=Y}) file_program=(cp -iR) ;;
+	${FFF_KEY_MOVE:=m} | ${FFF_KEY_MOVE_ALL:=M}) file_program=(mv -i) ;;
+	${FFF_KEY_LINK:=s} | ${FFF_KEY_LINK_ALL:=S}) file_program=(ln -s) ;;
+
+	# These are 'fff' functions.
+	${FFF_KEY_DELETE:=d} | ${FFF_KEY_DELETE_ALL:=D})
+		file_program=(trash)
+		;;
+
+	${FFF_KEY_BULK_RENAME:=b} | ${FFF_KEY_BULK_RENAME_ALL:=B})
+		file_program=(bulk_rename)
+		;;
+	esac
 
 	status_line
 }
@@ -1110,36 +1471,15 @@ key() {
 		"${FFF_KEY_BULK_RENAME:=b}")
 		((helping)) && return
 
-		[[ -z "${marked_files[*]}" ]] &&
-			return
-
-		previous_program="${file_program[0]}"
-
-		# Find the program to use.
-		case "$1" in
-		y) file_program=(cp -iR) ;;
-		m) file_program=(mv -i) ;;
-		s) file_program=(ln -s) ;;
-
-		# These are 'fff' functions.
-		d) file_program=(trash) ;;
-		b) file_program=(bulk_rename) ;;
-		esac
-
-		# Toggle the file progam if the same key was pressed.
-		[[ $previous_program == "${file_program[0]}" ]] &&
-			file_program=()
-
-		status_line
-		;;
-
-	# Mark files for operation.
-	"${FFF_KEY_MARK:=" "}")
 		mark "$scroll" "$1"
 		;;
 
 		# Mark all files for operation.
-	"${FFF_KEY_MARK_ALL:=v}")
+	"${FFF_KEY_YANK_ALL:=Y}" | \
+		"${FFF_KEY_MOVE_ALL:=M}" | \
+		"${FFF_KEY_DELETE_ALL:=D}" | \
+		"${FFF_KEY_LINK_ALL:=S}" | \
+		"${FFF_KEY_BULK_RENAME_ALL:=B}")
 		((helping)) && return
 
 		mark all "$1"
@@ -1152,11 +1492,6 @@ key() {
 		[[ ${marked_files[*]} ]] && {
 			[[ ! -w $PWD ]] && {
 				cmd_line "warn: no write access to dir."
-				return
-			}
-
-			[[ -z ${file_program[0]} ]] && {
-				cmd_line "warn: no operation selected [y,m,d,b,s]."
 				return
 			}
 
@@ -1181,7 +1516,6 @@ key() {
 
 		[[ ${marked_files[*]} ]] && {
 			marked_files=()
-			file_program=()
 			redraw
 		}
 		;;
@@ -1279,6 +1613,13 @@ key() {
 		((helping)) && return
 
 		draw_img
+		;;
+
+	"${FFF_KEY_ICON:=I}")
+		((helping)) && return
+
+		FFF_FILE_ICON=$(($((FFF_FILE_ICON + 1)) % 2))
+		redraw
 		;;
 
 	# Go to dir.
