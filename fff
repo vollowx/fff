@@ -162,13 +162,14 @@ get_icon() {
 	# $2 name of the file/directory
 	# $3 the extracted extension from the file name
 
+	local path=$1
+	local name=$2
+	local ext="$(echo $3 | cut -d '_' -f 2)"
+
 	# Icons for directories
 	[[ -d "$1" ]] && {
-		case "$2" in
-		'.git')
-			printf -- '󱃪'
-			return
-			;;
+		case "$name" in
+		# XDG dirs
 		'Desktop')
 			printf -- '󱂵'
 			return
@@ -201,7 +202,19 @@ get_icon() {
 			printf -- '󱧺'
 			return
 			;;
-
+			# Others
+		'.git')
+			printf -- '󰊢'
+			return
+			;;
+		'empty')
+			printf -- '󰉖'
+			return
+			;;
+		'node_modules')
+			printf -- '󰎙'
+			return
+			;;
 		*)
 			printf -- ''
 			return
@@ -210,76 +223,19 @@ get_icon() {
 	}
 
 	# Icons for files with no extension
-	[[ "$2" == *"/$3" ]] && {
+	[[ "$name" == "$ext" ]] && {
 		case "$2" in
-		'_gvimrc' | '_vimrc' | \
-			'bspwmrc' | 'cmakelists.txt' | \
-			'config' | 'Makefile' | \
-			'makefile' | 'sxhkdrc' | \
+		'config' | 'Makefile' | \
 			'ini')
 			printf -- '󱁻'
 			return
 			;;
-
-		'authorized_keys' | \
-			'known_hosts' | \
-			'license' | \
-			'LICENSE')
-			printf -- '󱕵'
-			return
-			;;
-
-		'gemfile' | \
-			'Rakefile' | \
-			'rakefile')
-			printf -- '󰴭'
-			return
-			;;
-
-		'a.out' | \
-			'configure')
-			printf -- '󰆍'
-			return
-			;;
-
-		'dockerfile')
-			printf -- ''
-			return
-			;;
-		'Dockerfile')
-			printf -- ''
-			return
-			;;
-		'dropbox')
-			printf -- ''
-			return
-			;;
-		'exact-match-case-sensitive-2')
-			printf -- 'X2'
-			return
-			;;
-		'ledger')
-			printf -- ''
-			return
-			;;
-		'node_modules')
-			printf -- '󰎙'
+		'LICENSE')
+			printf -- '󰿃'
 			return
 			;;
 		'playlists')
 			printf -- '󰲸'
-			return
-			;;
-		'procfile')
-			printf -- ''
-			return
-			;;
-		'README')
-			printf -- '󰍔'
-			return
-			;;
-		'*')
-			printf -- '󰈔'
 			return
 			;;
 		esac
@@ -287,34 +243,24 @@ get_icon() {
 
 	# Icon for files with the name starting with '.'
 	# without an extension
-	[[ "$2" == ".$3" ]] && {
+	[[ "$name" == ".$ext" ]] && {
 		case "$2" in
-		'.bash_aliases' | \
-			'.bash_history' | \
-			'.bash_logout' | \
-			'.bash_profile' | \
-			'.bashprofile' | \
-			'.bashrc' | \
-			'.dmrc' | \
+		'.bash_aliases' | '.bash_history' | \
+			'.bash_logout' | '.bash_profile' | '.bashrc' | \
 			'.DS_Store' | \
-			'.fasd' | \
-			'.gitattributes' | \
-			'.gitconfig' | \
-			'.gitignore' | \
-			'.inputrc' | \
-			'.jack-settings' | \
-			'.nvidia-settings-rc' | \
-			'.pam_environment' | \
-			'.profile' | \
-			'.recently-used' | \
-			'.selected_editor' | \
-			'.Xauthority' | \
-			'.Xdefaults' | \
-			'.xinitrc' | \
-			'.xinputrc' | \
-			'.Xresources' | \
-			'.zshrc')
+			'.pam_environment' | '.profile' | \
+			'.zshrc' | '.zhistory' | '.zshenv')
 			printf -- '󱁻'
+			return
+			;;
+		'.gitattributes' | \
+			'.gitconfig' | \
+			'.gitignore')
+			printf -- '󰊢'
+			return
+			;;
+		'.npmrc')
+			printf -- '󰛷'
 			return
 			;;
 		'.vim' | \
@@ -323,29 +269,17 @@ get_icon() {
 			printf -- ''
 			return
 			;;
-		'.gvimrc')
-			printf -- ''
-			return
-			;;
-		'.ncmpcpp')
-			printf -- '󰈣'
-			return
-			;;
-
-		'*')
-			printf -- '󰈔'
-			return
-			;;
 		esac
 	}
 
 	# Icon for files whose names have an extension
-	[[ "$2" == *"."* ]] && {
+	[[ "$name" == *"."* ]] && {
 		case "$2" in
-		'cmakelists.txt' | \
-			'Makefile.ac' | \
-			'Makefile.in' | \
-			'mimeapps.list' | \
+		'CONTRIBUTING.md')
+			printf -- '󰅍'
+			return
+			;;
+		'mimeapps.list' | \
 			'user-dirs.dirs')
 			printf -- '󱁻'
 			return
@@ -355,29 +289,25 @@ get_icon() {
 			printf -- '󰎙'
 			return
 			;;
-		'LICENSE.md')
-			printf -- '󱕵'
-			return
-			;;
-		'.gitlab-ci.yml')
-			printf -- '󰮠'
-			return
-			;;
-		'config.ru')
-			printf -- '󰴭'
-			return
-			;;
-		'docker-compose.yml')
-			printf -- '󰡨'
-			return
-			;;
 		'favicon.ico')
 			printf -- '󰓏'
 			return
 			;;
+		'README.md')
+			printf -- '󰋼'
+			return
+			;;
+		'robots.txt')
+			printf -- '󰚩'
+			return
+			;;
+		'vite.config.ts')
+			printf -- '󱐋'
+			return
+			;;
 		esac
 
-		case "$3" in
+		case "$ext" in
 		'7z' | 'apk' | \
 			'bz2' | 'cab' | \
 			'cpio' | 'deb' | \
@@ -440,32 +370,39 @@ get_icon() {
 			printf -- '󰙲'
 			return
 			;;
-		'docx' | 'doc' | \
-			'epub' | 'pdf' | \
-			'rtf' | 'xls' | \
-			'xlsx')
+		'docx' | 'doc')
+			printf -- '󰈬'
+			return
+			;;
+		'epub' | \
+			'rtf')
 			printf -- '󰂺'
 			return
 			;;
-		'haml')
-			printf -- ''
+		'pdf')
+			printf -- '󰈦'
 			return
 			;;
-		'htm' | 'html' | 'xhtml')
+		'xls' | 'xlsx')
+			printf -- '󰈛'
+			return
+			;;
+		'ejs' | 'slim' | \
+			'htm' | 'html' | 'xhtml')
 			printf -- '󰌝'
 			return
 			;;
-		'ejs' | 'slim' | 'xml')
-			printf -- '󰗀'
+		'xml')
+			printf -- '󰈮'
 			return
 			;;
 		'a' | 'cmake' | \
 			'jl' | 'o' | \
 			'so')
-			printf -- ''
+			printf -- '󰛡'
 			return
 			;;
-		'asm' | 'css')
+		'css')
 			printf -- '󰌜'
 			return
 			;;
@@ -481,15 +418,8 @@ get_icon() {
 			printf -- ''
 			return
 			;;
-		'markdown' | \
-			'md' | 'mdx' | \
-			'rmd')
+		'md' | 'mdx')
 			printf -- '󰍔'
-			return
-			;;
-		'gemspec' | \
-			'rake' | 'rb')
-			printf -- '󰴭'
 			return
 			;;
 		'dll' | 'exe' | \
@@ -511,11 +441,7 @@ get_icon() {
 			printf -- '󰌠'
 			return
 			;;
-		'hh' | 'hxx')
-			printf -- '󰬏'
-			return
-			;;
-		'js' | 'mjs')
+		'js' | 'cjs' | 'mjs')
 			printf -- ''
 			return
 			;;
@@ -525,10 +451,6 @@ get_icon() {
 			;;
 		'key' | 'pub')
 			printf -- '󱕵'
-			return
-			;;
-		'ml' | 'mli')
-			printf -- 'λ'
 			return
 			;;
 		'vim' | 'vimrc')
@@ -549,10 +471,6 @@ get_icon() {
 			;;
 		'sln' | 'suo')
 			printf -- '󰘐'
-			return
-			;;
-		'coffee')
-			printf -- ''
 			return
 			;;
 		'ai')
@@ -601,6 +519,10 @@ get_icon() {
 			;;
 		'ts')
 			printf -- '󰛦'
+			return
+			;;
+		'txt')
+			printf -- '󰈙'
 			return
 			;;
 		'vue')
@@ -783,7 +705,7 @@ print_line() {
 	# Remove all non-printable characters.
 	file_name=${file_name//[^[:print:]]/^[}
 
-	((${FFF_FILE_ICON:=0} == 1)) &&
+	((${FFF_FILE_ICON:=0} == 1 && !helping)) &&
 		icon="$(get_icon "${list[$1]}" "$file_name" "$file_ext") "
 
 	printf '\r%b%s\e[m\r' \
@@ -971,10 +893,10 @@ list_help() {
 		'enter: go to child dir'
 		'backspace: go to parent dir'
 		''
-		"${FFF_KEY_HALF_PAGE_DOWN1:-C-d}: scroll half page down"
-		"${FFF_KEY_HALF_PAGE_UP1:-C-u}: scroll half page up"
-		"${FFF_KEY_PAGE_DOWN1:-C-f}: scroll one page down"
-		"${FFF_KEY_PAGE_UP1:-C-b}: scroll one page up"
+		"${FFF_KEY_HALF_PAGE_DOWN:-C-d}: scroll half page down"
+		"${FFF_KEY_HALF_PAGE_UP:-C-u}: scroll half page up"
+		"${FFF_KEY_PAGE_DOWN:-C-f}: scroll one page down"
+		"${FFF_KEY_PAGE_UP:-C-b}: scroll one page up"
 		"${FFF_KEY_TO_TOP:-g}: go to top"
 		"${FFF_KEY_TO_BOTTOM:-G}: go to bottom"
 		''
@@ -985,14 +907,14 @@ list_help() {
 		''
 		"${FFF_KEY_HIDDEN:-.}: toggle hidden files"
 		"${FFF_KEY_SEARCH:-/}: search"
-		"${FFF_KEY_REFRESH:-e}: refresh current dir"
+		"${FFF_KEY_REFRESH:-R}: refresh current dir"
 		"${FFF_KEY_SHELL:-!}: open shell in current dir"
 		"${FFF_KEY_ATTRIBUTES:-K}: view file/dir attributes"
 		"${FFF_KEY_IMAGE:-i}: display image with w3m-img"
-		"${FFF_KEY_ICON:-I}: display icon with nerd font"
+		"${FFF_KEY_ICON:-I}: display icon (may cause perf problems)"
 		''
-		"${FFF_KEY_MKFILE:-n}: new file"
-		"${FFF_KEY_MKDIR:-N}: new dir"
+		"${FFF_KEY_MKFILE:-a}: new file"
+		"${FFF_KEY_MKDIR:-A}: new dir"
 		"${FFF_KEY_RENAME:-r}: rename"
 		"${FFF_KEY_EXECUTABLE:-X}: toggle executable"
 		''
@@ -1011,7 +933,7 @@ list_help() {
 		"${FFF_KEY_SUBMIT:-p}: submit file operation"
 		"${FFF_KEY_CLEAR:-ESC}: clear file selections"
 		''
-		'[1-9]: favourites/bookmarks (see customization in man page)'
+		'[1-9]: favourites/bookmarks (see source code QwQ)'
 		''
 		"q: exit with 'cd' (if enabled) or exit this help"
 		"Ctrl+C: exit without 'cd'"
@@ -1370,7 +1292,7 @@ key() {
 		;;
 
 		# Page up
-	"${FFF_KEY_PAGE_DOWN1:=}")
+	"${FFF_KEY_PAGE_DOWN:=}")
 		for ((ii = 0; ii < scroll_page; ii++)); do
 			((scroll >= list_total)) && break
 			((scroll++))
@@ -1384,7 +1306,7 @@ key() {
 		;;
 
 	# Page down
-	"${FFF_KEY_PAGE_UP1:=}")
+	"${FFF_KEY_PAGE_UP:=}")
 		for ((ii = 0; ii < scroll_page; ii++)); do
 			((scroll <= 0)) && break
 			((scroll--))
@@ -1404,7 +1326,7 @@ key() {
 		;;
 
 		# Half page up
-	"${FFF_KEY_HALF_PAGE_DOWN1:=}")
+	"${FFF_KEY_HALF_PAGE_DOWN:=}")
 		for ((ii = 0; ii < scroll_page / 2; ii++)); do
 			((scroll >= list_total)) && break
 			((scroll++))
@@ -1418,7 +1340,7 @@ key() {
 		;;
 
 	# Half page down
-	"${FFF_KEY_HALF_PAGE_UP1:=}")
+	"${FFF_KEY_HALF_PAGE_UP:=}")
 		for ((ii = 0; ii < scroll_page / 2; ii++)); do
 			((scroll <= 0)) && break
 			((scroll--))
@@ -1621,7 +1543,7 @@ key() {
 		;;
 
 		# Create a directory.
-	"${FFF_KEY_MKDIR:=n}")
+	"${FFF_KEY_MKDIR:=A}")
 		((helping)) && return
 
 		cmd_line "mkdir: " "dirs"
@@ -1640,7 +1562,7 @@ key() {
 		;;
 
 		# Create a file.
-	"${FFF_KEY_MKFILE:=f}")
+	"${FFF_KEY_MKFILE:=a}")
 		((helping)) && return
 
 		cmd_line "mkfile: "
@@ -1700,7 +1622,7 @@ key() {
 		redraw
 		;;
 
-		# Go to dir.
+	# Go to dir.
 	"${FFF_KEY_GO_DIR:=:}")
 		((helping)) && return
 
@@ -1714,7 +1636,7 @@ key() {
 			open "$PWD"
 		;;
 
-		# Go to '$HOME'.
+	# Go to '$HOME'.
 	"${FFF_KEY_GO_HOME:=~}")
 		((helping)) && return
 
@@ -1737,7 +1659,7 @@ key() {
 		;;
 
 	# Refresh current dir.
-	"${FFF_KEY_REFRESH:=r}")
+	"${FFF_KEY_REFRESH:=R}")
 		((helping)) && {
 			list=("${cur_list[@]}")
 			redraw
